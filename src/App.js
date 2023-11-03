@@ -8,8 +8,7 @@ import { theme } from "./Theme";
 import './index.css';
 import 'survey-core/defaultV2.min.css';
 
-//BigQuery Init  
-const {BigQuery} = require('@google-cloud/bigquery');
+const { BigQuery } = require('@google-cloud/bigquery');
 
 function App() {
 
@@ -50,7 +49,7 @@ function App() {
   survey.applyTheme(theme);
   const surveyComplete = useCallback((sender) => {
     saveSurveyResults(sender.data);
-  })
+  });
   survey.onComplete.add(surveyComplete);
 
   //Render
@@ -62,13 +61,34 @@ function App() {
   );
 }
 
+//Save data to BigQuery
 function saveSurveyResults(json) {
-  //Save to BigQuery!
+  uploadResults(json.Nickname, json.WorldDriversChampion, json.WorldConstructorsChampion, json.SummerBreakLead, json.DriverofTheDayAwards, json.DNFs, json.FirstWin, json.SelfPrediction);
+}
 
+async function uploadResults(nn, wdc, wcc, sbl, dotd, dnfs, fw, sp){
 
-  
-  const BQClient = new BigQuery();
-  
+  //BQ Init
+  const clientOptions = {
+    keyFilename: 'service_account.json',
+    projectId: 'f1-predictor',
+  };
+
+  const bigquery = new BigQuery(clientOptions);
+
+  const query = `INSERT INTO Predictions.PredictionsTable ('Nickname', 'WorldDriversChampion', 'WorldConstructorsChampion', 'SummerBreakLead', 'DriverOfTheDayAwards', 'DNFs', 'FirstWin', 'SelfPrediction')
+                 VALUES (`+nn+`,`+wdc+`,`+wcc+`,`+sbl+`,`+dotd+`,`+dnfs+`,`+fw+`,`+sp+`)`;
+                 
+  const queryOptions = {
+    query: query,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'EU',
+  };
+
+  const [job] = await bigquery.createQueryJob(queryOptions);
+  await job.getQueryResults();
+  console.log('Rows:');
+
 }
 
 export default App;
