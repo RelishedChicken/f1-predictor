@@ -5,13 +5,11 @@ import { quiz } from './Quiz';
 import { competitors } from './Competitors';
 import { winners } from './Winners';
 import { theme } from "./Theme";
+import { BigQuery } from '/@google-cloud/bigquery';
 import './index.css';
 import 'survey-core/defaultV2.min.css';
 
-const { BigQuery } = require('@google-cloud/bigquery');
-
 function App() {
-
 
   //Breakdown competitor data
   const allDrivers = [];
