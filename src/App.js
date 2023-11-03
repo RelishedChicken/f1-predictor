@@ -8,7 +8,11 @@ import { theme } from "./Theme";
 import './index.css';
 import 'survey-core/defaultV2.min.css';
 
+//BigQuery Init  
+const {BigQuery} = require('@google-cloud/bigquery');
+
 function App() {
+
 
   //Breakdown competitor data
   const allDrivers = [];
@@ -60,7 +64,11 @@ function App() {
 
 function saveSurveyResults(json) {
   //Save to BigQuery!
-  alert(JSON.stringify(json));
+
+
+  
+  const BQClient = new BigQuery();
+  
 }
 
 export default App;
