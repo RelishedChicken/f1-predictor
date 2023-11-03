@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import $ from "jquery";
 import { Survey } from 'survey-react-ui';
 import { Model } from 'survey-core';
 import { quiz } from './Quiz';
